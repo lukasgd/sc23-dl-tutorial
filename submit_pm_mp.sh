@@ -1,20 +1,18 @@
 #!/bin/bash 
-#SBATCH -C gpu
-#SBATCH -A ntrain4
+#SBATCH -p nvgpu
+#SBATCH -A csstaff
 #SBATCH --ntasks-per-node 4
-#SBATCH --cpus-per-task 32
-#SBATCH --gpus-per-node 4
+#SBATCH --gpus-per-node=4
 #SBATCH --time=01:00:00
-#SBATCH --image=nersc/pytorch:ngc-23.07-v0
-#SBATCH --module=gpu,nccl-2.18
-#SBATCH --reservation=sc23_dl_tutorial_2
 #SBATCH -J vit-era5-mp
-#SBATCH -o %x-%j.out
+#SBATCH -o logs/%x-%j.out
 
-DATADIR=/pscratch/sd/s/shas1693/data/sc23_tutorial_data/downsampled
-LOGDIR=${SCRATCH}/sc23-dl-tutorial/logs
+environment=$(realpath env/ngc-fcn-24.01.toml)
+
+DATADIR=/iopsstor/scratch/cscs/lukasd/ds/tutorials/sc23_data
+LOGDIR=logs
 mkdir -p ${LOGDIR}
-args="${@}"
+args="--expdir ${LOGDIR} --datadir ${DATADIR} ${@}"
 #args="--config=mp --row_parallel_size=4"
 
 export FI_MR_CACHE_MONITOR=userfaultfd
@@ -30,13 +28,19 @@ fi
 
 export MASTER_ADDR=$(hostname)
 
-# Reversing order of GPUs to match default CPU affinities from Slurm
-export CUDA_VISIBLE_DEVICES=3,2,1,0
-
 # if cuda graphs, use train_mp_graphs.py
 set -x
-srun -u shifter -V ${DATADIR}:/data -V ${LOGDIR}:/logs \
+# Launching training with tensorboard on rank 0
+srun -ul --environment=${environment} \
     bash -c "
+if [ \"\${SLURM_PROCID:-0}\" -eq 0 ]; then
+        echo \"Launching tensorboard...
+Use port-forwarding on your client machine with
+  ssh -N -L 6006:localhost:6006 \$(hostname)
+and open the browser at http://localhost:6006/.\"
+        tensorboard --logdir ${LOGDIR} --port 6006 &
+    fi
+    echo \"\${SLURM_PROCID:-0}: Running training script on \$(hostname)\"
     source export_DDP_vars.sh
     ${PROFILE_CMD} python train_mp.py ${args}
     "
