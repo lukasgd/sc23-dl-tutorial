@@ -1,0 +1,20 @@
+image = "/iopsstor/scratch/cscs/lukasd/enroot/lukasgd+ngc-fcn+24.01.sqsh"
+# image = "/iopsstor/scratch/cscs/lukasd/enroot/lukasgd+ngc-fcn+22.04.sqsh"
+
+mounts = [
+        "/iopsstor/scratch/cscs/lukasd:/iopsstor/scratch/cscs/lukasd"
+]
+
+workdir = "/iopsstor/scratch/cscs/lukasd/llm/sc23-dl-tutorial"
+
+writable = true
+
+[env]
+# TODO: complete NCCL options and add OFI plugin
+NCCL_NET_GDR_LEVEL = "PHB"
+NCCL_DEBUG = "WARN"
+
+# # if uncommented must use --pty with srun
+# [annotations.com.hooks.ssh]
+# enabled = "true"
+# authorize_ssh_key = "/users/lukasd/.ssh/cscs-key.pub"
