@@ -10,9 +10,12 @@ workdir = "/iopsstor/scratch/cscs/lukasd/llm/sc23-dl-tutorial"
 writable = true
 
 [env]
-# TODO: complete NCCL options and add OFI plugin
-NCCL_NET_GDR_LEVEL = "PHB"
 NCCL_DEBUG = "WARN"
+
+# Enable the aws-ofi-nccl hook to use slingshot
+[annotations]
+com.hooks.aws_ofi_nccl.enabled = "true"
+com.hooks.aws_ofi_nccl.variant = "cuda12"
 
 # # if uncommented must use --pty with srun
 # [annotations.com.hooks.ssh]
