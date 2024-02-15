@@ -15,7 +15,6 @@ mkdir -p ${LOGDIR}
 args="--expdir ${LOGDIR} --datadir ${DATADIR} ${@}"
 #args="--config=mp --row_parallel_size=4"
 
-export FI_MR_CACHE_MONITOR=userfaultfd
 export HDF5_USE_FILE_LOCKING=FALSE
 
 # Profiling

@@ -12,7 +12,6 @@ LOGDIR=logs
 mkdir -p ${LOGDIR}
 args="--expdir ${LOGDIR} --datadir ${DATADIR} ${@}"
 
-export FI_MR_CACHE_MONITOR=userfaultfd
 export HDF5_USE_FILE_LOCKING=FALSE
 
 # Profiling
@@ -27,7 +26,7 @@ export MASTER_ADDR=$(hostname)
 
 set -x
 # Launching training with tensorboard on rank 0
-srun -ul --environment=${environment} \
+srun -ul --environment=${environment} --pty \
     bash -c "
     if [ \"\${SLURM_PROCID:-0}\" -eq 0 ]; then
         echo \"Launching tensorboard...

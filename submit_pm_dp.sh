@@ -14,7 +14,6 @@ LOGDIR=logs
 mkdir -p ${LOGDIR}
 args="--expdir ${LOGDIR} --datadir ${DATADIR} ${@}"
 
-export FI_MR_CACHE_MONITOR=userfaultfd
 export HDF5_USE_FILE_LOCKING=FALSE
 
 # Profiling
