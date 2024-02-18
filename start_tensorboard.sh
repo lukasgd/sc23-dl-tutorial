@@ -7,7 +7,7 @@
 #SBATCH -J vit-era5-tensorboard
 #SBATCH -o logs/%x-%j.out
 
-environment=$(realpath env/ngc-fcn-24.01.toml)
+environment=$(realpath env/ngc-sc22-dl-tutorial-24.01.toml)
 
 LOGDIR=logs
 

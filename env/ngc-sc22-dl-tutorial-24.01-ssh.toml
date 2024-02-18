@@ -1,4 +1,4 @@
-image = "/iopsstor/scratch/cscs/lukasd/enroot/lukasgd+ngc-fcn+24.01.sqsh"
+image = "/iopsstor/scratch/cscs/lukasd/enroot/lukasgd+ngc-sc22-dl-tutorial+24.01.sqsh"
 
 mounts = [
         "/iopsstor/scratch/cscs:/iopsstor/scratch/cscs",
