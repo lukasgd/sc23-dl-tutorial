@@ -32,8 +32,8 @@ from utils.plots import generate_images
 def train(params, args, local_rank, world_rank, world_size):
     # set device and benchmark mode
     torch.backends.cudnn.benchmark = True
-    torch.cuda.set_device(local_rank)
-    device = torch.device('cuda:%d'%local_rank)
+    torch.cuda.set_device(local_rank % torch.cuda.device_count())
+    device = torch.device('cuda:%d' % (local_rank  % torch.cuda.device_count()))
 #    torch.autograd.set_detect_anomaly(True)
 
     # init pynvml and get handle
@@ -60,8 +60,8 @@ def train(params, args, local_rank, world_rank, world_size):
         sync_params(model)
 
     if params.distributed and not args.noddp:
-        model = init_ddp_model_and_reduction_hooks(model, device_ids=[local_rank],
-                                                   output_device=[local_rank],
+        model = init_ddp_model_and_reduction_hooks(model, device_ids=[local_rank % torch.cuda.device_count()],
+                                                   output_device=[local_rank % torch.cuda.device_count()],
                                                    bucket_cap_mb=args.bucket_cap_mb)
 
 
@@ -240,7 +240,7 @@ def train(params, args, local_rank, world_rank, world_size):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--expdir", type=str, help='Logs directory')
-    parser.add_argument("--datadir", default='/iopsstor/scratch/cscs/lukasd/ds/tutorials/sc23_data', type=str, help='Path to data directory')
+    parser.add_argument("--datadir", default='/mchstor2/scratch/cscs/lukasd/tutorials/sc23_data', type=str, help='Path to data directory')
     parser.add_argument("--run_num", default='00', type=str, help='tag for indexing the current experiment')
     parser.add_argument("--yaml_config", default='./config/ViT.yaml', type=str, help='path to yaml file containing training configs')
     parser.add_argument("--config", default='base', type=str, help='name of desired config in yaml file')

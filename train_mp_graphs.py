@@ -83,8 +83,8 @@ def capture_model(params, model, loss_func, scaler, capture_stream, device, num_
 def train(params, args, local_rank, world_rank, world_size):
     # set device and benchmark mode
     torch.backends.cudnn.benchmark = True
-    torch.cuda.set_device(local_rank)
-    device = torch.device('cuda:%d'%local_rank)
+    torch.cuda.set_device(local_rank % torch.cuda.device_count())
+    device = torch.device('cuda:%d' % (local_rank  % torch.cuda.device_count()))
 
     # init pynvml and get handle
     pynvml.nvmlInit()
@@ -114,8 +114,8 @@ def train(params, args, local_rank, world_rank, world_size):
     capture_stream = torch.cuda.Stream()
     if params.distributed:
         with torch.cuda.stream(capture_stream):
-            model = init_ddp_model_and_reduction_hooks(model, device_ids=[local_rank],
-                                                    output_device=[local_rank],
+            model = init_ddp_model_and_reduction_hooks(model, device_ids=[local_rank % torch.cuda.device_count()],
+                                                    output_device=[local_rank % torch.cuda.device_count()],
                                                     bucket_cap_mb=args.bucket_cap_mb)
     capture_stream.synchronize()
 
