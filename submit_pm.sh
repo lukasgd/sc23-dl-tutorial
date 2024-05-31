@@ -1,5 +1,4 @@
 #!/bin/bash 
-##SBATCH -p nvgpu 
 #SBATCH -A csstaff
 #SBATCH --time=01:00:00
 #SBATCH -J vit-era5
