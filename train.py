@@ -220,7 +220,7 @@ def train(params, args, local_rank, world_rank, world_size):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--expdir", type=str, help='Logs directory')
-    parser.add_argument("--datadir", default='/mchstor2/scratch/cscs/lukasd/tutorials/sc23_data', type=str, help='Path to data directory')
+    parser.add_argument("--datadir", default='/iopsstor/scratch/cscs/lukasd/ds/tutorials/sc23_data', type=str, help='Path to data directory')
     parser.add_argument("--run_num", default='00', type=str, help='tag for indexing the current experiment')
     parser.add_argument("--yaml_config", default='./config/ViT.yaml', type=str, help='path to yaml file containing training configs')
     parser.add_argument("--config", default='base', type=str, help='name of desired config in yaml file')

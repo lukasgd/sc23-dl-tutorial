@@ -6,7 +6,7 @@
 
 environment=$(realpath env/ngc-sc22-dl-tutorial-24.05.toml)
 
-DATADIR=/mchstor2/scratch/cscs/lukasd/tutorials/sc23_data
+DATADIR=/iopsstor/scratch/cscs/lukasd/ds/tutorials/sc23_data
 LOGDIR=logs
 mkdir -p ${LOGDIR}
 args="--expdir ${LOGDIR} --datadir ${DATADIR} ${@}"
@@ -53,5 +53,5 @@ srun -ul --environment=${environment} ${ENROOT_ENTRYPOINT} \
     else
         DEBUG_CMD=\"\"
     fi
-    CUDA_VISIBLE_DEVICES=\${SLURM_LOCALID} ${PROFILE_CMD} python \${DEBUG_CMD} train.py ${args}
+    ${PROFILE_CMD} python \${DEBUG_CMD} train.py ${args}
     "
